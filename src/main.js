@@ -11,6 +11,9 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 import Mint from 'mint-ui';
 import { Dialog } from 'vant';
+import echarts from 'echarts'
+import '../static/jquery-3.4.1'
+Vue.prototype.$echarts = echarts
 Vue.use(Mint);
 Vue.use(Dialog);
 Vue.use(Vant);

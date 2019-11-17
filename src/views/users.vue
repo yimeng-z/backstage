@@ -227,7 +227,6 @@ export default {
         tel: ""
       },
       users: {},
-      a: false,
       currentPage4: 1,
       changeset: {
         user: "",
@@ -367,9 +366,10 @@ export default {
           };
           console.log(obj);
           _product.delUser(obj).then(res => {
+            console.log(res.data)
             this.$message({
               type: "success",
-              message: res.data.mate.msg
+              message: res.data.mata.msg
             });
             this.$router.push({
               path: "/users"

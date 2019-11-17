@@ -10,6 +10,7 @@ import Rights from '../views/rights'
 import Roles from '../views/roles'
 import Params from '../views/params'
 import Reports from '../views/reports'
+import Add from '../views/add'
 Vue.use(Router)
 const routerPush = Router.prototype.push
 Router.prototype.push = function push(location) {
@@ -38,7 +39,7 @@ export default new Router({
         },
         {
           path:'/goods',
-          component:Goods
+          component:Goods,
         },
         {
           path:'/orders',
@@ -60,6 +61,10 @@ export default new Router({
           path:'/reports',
           component:Reports
         },
+        {
+          path:'/add',
+          component:Add
+        }
       ]
     },
     

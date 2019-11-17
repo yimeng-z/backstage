@@ -52,6 +52,9 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 //@import url(); 引入公共css类
 .header{
     width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 .lefts_top {
   display: flex;

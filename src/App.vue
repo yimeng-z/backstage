@@ -44,4 +44,9 @@ export default {
   list-style: none;
   font-size: 16px;
 }
+.right_users{
+  background-color: #ddd;
+  box-sizing: border-box;
+  padding: 30px;
+}
 </style>

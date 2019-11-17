@@ -46,12 +46,22 @@
               <el-table :data="rolesLists" size="mini" style="width: 100%">
                 <el-table-column type="expand">
                   <template slot-scope="props">
-                    <div class="biao" v-for="(v1,i1) in props.row.children" :key="i1">
-                      <el-tag size="mini" closable>{{v1.authName}}</el-tag>
-                      <div v-for="(v2,i2) in v1.children" :key="i2">
-                        <el-tag size="mini" type="success" closable>{{v2.authName}}</el-tag>
-                        <div v-for="(v3,i3) in v2.children" :key="i3">
-                          <el-tag size="mini" type="danger" closable>{{v3.authName}}</el-tag>
+                    <div class="roles_goodsType" v-for="(v1,i1) in props.row.children" :key="i1">
+                      <el-tag class="roles_goodsType_first_tag" size="mini" closable>{{v1.authName}}</el-tag>
+                      <div class="roles_goodsType_secend" v-for="(v2,i2) in v1.children" :key="i2">
+                        <el-tag
+                          class="roles_goodsType_secend_tag"
+                          size="mini"
+                          type="success"
+                          closable
+                        >{{v2.authName}}</el-tag>
+                        <div class="roles_goodsType_third" v-for="(v3,i3) in v2.children" :key="i3">
+                          <el-tag
+                            size="mini"
+                            class="roles_goodsType_third_tag"
+                            type="danger"
+                            closable
+                          >{{v3.authName}}</el-tag>
                         </div>
                       </div>
                     </div>
@@ -111,9 +121,10 @@
                         :data="datas"
                         show-checkbox
                         node-key="id"
+                        ref="tree"
                         :props="defaultProps"
-                        :default-expanded-keys="[2,3,4,5,6]"
-                        :default-checked-keys="[2,3,4,5,6]"
+                        default-expand-all
+                        @check="getId"
                       ></el-tree>
                       <div slot="footer" class="dialog-footer">
                         <el-button @click="fenpeiRights = false">取 消</el-button>
@@ -134,15 +145,11 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import Lefts from "../components/lefts";
-import Header from "../components/header";
 import Product from "../services/views-services";
 const _product = new Product();
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Lefts,
-    Header
   },
   inject: ["reload"],
   data() {
@@ -164,8 +171,10 @@ export default {
       datas: [],
       defaultProps: {
         children: "children",
-        label: "label"
-      }
+        label: "authName"
+      },
+      get:[],
+      fenpeiId:''
     };
   },
   //监听属性 类似于data概念
@@ -174,12 +183,47 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    getId() {
+      this.get = this.$refs.tree.getCheckedNodes()
+      console.log(this.get)
+    },
     fenpeiRight() {
-      this.fenpeiRights = false;
+      let a = []
+      this.get.forEach(v=>{
+        a.push(v.id)
+      })
+      a.join()
+      let obj={
+        id:this.fenpeiId,
+        rids:a.join()
+      }
+      _product.distribution(obj).then(res=>{
+        this.$message({
+          message:res.data.meta.msg
+        })
+        this.reload()
+      })
     },
     fenpei(i, v) {
+      console.log(v)
       this.fenpeiRights = true;
-      console.log(this.datas);
+      this.fenpeiId=v.id
+      _product.rolesList().then(res=>{
+        if(res.data.meta.status==200){
+          let arr =[];
+          arr.push(v.id)
+          v.children.map(item=>{
+            arr.push(item.id);
+            item.children.map(j=>{
+              arr.push(j.id);
+              j.children.map(x=>{
+                arr.push(x.id)
+              })
+            })
+          })
+          this.$refs.tree.setCheckedKeys(arr,true)
+        }
+      })
     },
     del(i, v) {
       this.$confirm("此操作不可逆 是否继续?", "提示", {
@@ -219,7 +263,7 @@ export default {
       };
       _product.updateRoles(obj).then(res => {
         this.$message({
-          message: res.data.meta.msg
+          message: "修改成功"
         });
         this.reload();
       });
@@ -246,6 +290,12 @@ export default {
     _product.rightsList().then(res => {
       console.log(res.data);
       this.datas = res.data.data;
+      // for (let i = 0; i < array.length; i++) {
+      //   if(array[i] instanceof Array){
+      //     a++;
+      //     a
+      //   }
+      // }
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -261,6 +311,24 @@ export default {
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
+.roles_goodsType {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+  > div {
+    width: 80%;
+    display: flex;
+    margin-top: 10px;
+    width: 80%;
+    margin-left: 100px;
+    align-items: center;
+    .el-tag.el-tag--danger {
+      margin-left: 10px;
+    }
+  }
+}
 .roles {
   width: 100%;
 }

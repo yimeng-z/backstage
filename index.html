@@ -1,12 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>backstage</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>backstage</title>
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>
+<script src="./static//jquery-3.4.1.js"></script>
+<script>
+  $(function () {
+    var height = $(Window).width();
+    $("#app").css({
+      'height': height,
+    })
+    $("#app").click(function (e) {
+      var tem = "<h6>❤</h6>";
+      var x = e.pageX;
+      var y = e.pageY;
+      $(this).append(tem);
+      $("h6").css({
+        "z-index": 9999,
+        'position': 'absolute',
+        'top': y - 20,
+        'left': x,
+        'color': '#ff0000'
+      })
+      $("h6").animate({
+        'top': y - 300,
+        'opacity': 0,
+        'fontSize': '50px',
+      }, 1000, function () {
+        $(this).empty()
+      })
+    })
+  })
+
+</script>

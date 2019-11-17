@@ -5,54 +5,20 @@
       <div class="roles_right">
         <p class="roles_right_title">
           <span>首页></span>
-          <span>首页></span>
-          <span>首页></span>
+          <span>权限管理></span>
+          <span>权限列表></span>
         </p>
         <div class="roles_right_content">
-          <el-table :data="datas" style="width: 100%">
-            <el-table-column type="index" label="#" width="180"></el-table-column>
-            <el-table-column prop="authName" label="权限名称" width="180"></el-table-column>
-            <el-table-column prop="path" label="路径"></el-table-column>
-            <!-- <el-table-column prop="address" label="权限等级"></el-table-column> -->
+          <el-table :data="datas" style="width: 100%;boxSizing:borderBox;padding:20px">
+            <el-table-column type="index" label="#" ></el-table-column>
+            <el-table-column prop="authName" label="权限名称" ></el-table-column>
+            <el-table-column prop="path" label="路径" ></el-table-column>
+            <el-table-column prop="ji" label="权限等级">
+                  <template slot-scope="scope">
+                    <el-tag :type="`${scope.row.ji=='一级'?'warning':scope.row.ji=='二级'?'info':'danger'}`">{{scope.row.ji}}</el-tag>
+                </template>
+            </el-table-column>
           </el-table>
-            <el-table
-    ref="filterTable"
-    :data="datas"
-    style="width: 100%">
-    <el-table-column
-      prop="date"
-      sortable
-      type="index" label="#" width="180"
-      column-key="date"
-    >
-    </el-table-column>
-    <el-table-column
-     prop="authName" label="权限名称" 
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="地址"
-      :formatter="formatter">
-    </el-table-column>
-    <el-table-column
-     prop="path" label="路径" 
-      width="180">
-    </el-table-column>
-    <!-- <el-table-column
-      prop="childer"
-      label="标签"
-      width="100"
-      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
-      :filter-method="filterTag"
-      filter-placement="bottom-end">
-      <template slot-scope="scope">
-        <el-tag
-          :type="scope.row.tag === '家' ? 'primary' : 'success'"
-          disable-transitions>{{scope.row.tag}}</el-tag>
-      </template>
-    </el-table-column> -->
-  </el-table>
         </div>
       </div>
     </div>
@@ -64,6 +30,7 @@
 //例如：import 《组件名称》 from '《组件路径》';
 import Product from "../services/views-services";
 const _product = new Product();
+import Sort from '../utils/sort'
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -79,28 +46,24 @@ export default {
   watch: {},
   //方法集合
   methods: {
-        resetDateFilter() {
-        this.$refs.filterTable.clearFilter('date');
-      },
-      clearFilter() {
-        this.$refs.filterTable.clearFilter();
-      },
-      formatter(row, column) {
-        return row.address;
-      },
-      filterTag(value, row) {
-        return row.tag === value;
-      },
-      filterHandler(value, row, column) {
-        const property = column['property'];
-        return row[property] === value;
-      }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     _product.rightsList().then(res => {
       console.log(res.data);
-      this.datas = res.data.data;
+      res.data.data.forEach(v=>{
+        v.ji = "一级"
+        this.datas.push(v)
+        v.children.forEach(j=>{
+          j.ji = "二级"
+        this.datas.push(j)
+          j.children.forEach(l=>{
+            l.ji="三级"
+            this.datas.push(l)
+          })
+        })
+      })
+      this.datas=this.datas.sort(Sort.compare(("id"),true))
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

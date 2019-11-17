@@ -13,6 +13,7 @@
         text-color="white"
         :collapse-transition="false"
         router
+        unique-opened
       >
         <el-submenu :key="i" v-for="(v,i) in menu" :index="String(v.order)">
           <template slot="title">
@@ -99,16 +100,24 @@ export default {
   font-size: 16px;
 }
 .lefts {
-  position: relative;
-  top: 0;
-  left: 0;
+  height: 100vh;
+  min-height: 800px;
+  // overflow: hidden;
+  // padding-bottom: 2009px;
+  background-color: #333744;
+  // margin-bottom: -999px;
+  padding-top: 60px;
 }
-.active {
-  color: darkolivegreen;
-}
-.el-menu-vertical-demo:not(.el-menu--collapse) {
+.el-menu-vertical-demo:not(.el-menu--collapse){
+  height: 100% !important;
   width: 200px;
-  min-height: 400px;
+}
+.el-aside{
+  background-color: #333744;
+  height: 100vh;
+}
+.el-menu--collapse{
+  height: 100% !important;
 }
 img {
   width: 50px;
@@ -116,43 +125,14 @@ img {
   border-radius: 50%;
 }
 .lefts_left1 {
-  height: 875px;
   width: 64px;
   background-color: #333744;
   // transition: all 1s;
 }
 .lefts_left2 {
-  height: 875px;
   width: 200px;
   background-color: #333744;
   // transition: all 1s;
-}
-.lefts_top {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 80px;
-  background-color: #333744;
-  color: white;
-  justify-content: space-between;
-  div {
-    width: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    p {
-      font-family: "黑体";
-      font-size: 20px;
-    }
-  }
-  button {
-    margin-right: 50px;
-    width: 100px;
-    height: 45px;
-    color: black;
-    border: none;
-    border-radius: 5px;
-  }
 }
 .el-radio-group {
   background-color: darkslategray !important;
